@@ -65,13 +65,23 @@ public class GameOverPanel extends JPanel {
         buttonPanel.setAlignmentX(Component.CENTER_ALIGNMENT);
     }
 
+    public GameOverPanel(){
+        this.gameResult = null;
+    }
+
+
     /**
      * Sets the game results, updates the UI, and saves results to the log file (if human was playing)
      */
     // TODO: refactor this method
-    public void setGameResults(GameResult result){
+    public GameResult setGameResults(GameResult result){
         this.gameResult = result;
+        setAnswerText(result);
+        writeStatsToFile(result);
+        return this.gameResult;
+    }
 
+    public String[] setAnswerText(GameResult result){
         answerTxt.setText("The answer was " + result.correctValue + ".");
         if(result.numGuesses == 1){
             numGuessesTxt.setText((result.humanWasPlaying ? "You" : "I") + " guessed it on the first try!");
@@ -79,7 +89,13 @@ public class GameOverPanel extends JPanel {
         else {
             numGuessesTxt.setText("It took " + (result.humanWasPlaying ? "you" : "me") + " " + result.numGuesses + " guesses.");
         }
+        String[] texts = new String[2];
+        texts[0] = answerTxt.getText();
+        texts[1] = numGuessesTxt.getText();
+        return texts;
+    }
 
+    public int writeStatsToFile(GameResult result){
         if(result.humanWasPlaying){
             // write stats to file
             try(CSVWriter writer = new CSVWriter(new FileWriter(StatsFile.FILENAME, true))) {
@@ -92,7 +108,12 @@ public class GameOverPanel extends JPanel {
             } catch (IOException e) {
                 // NOTE: In a full implementation, we would log this error and possibly alert the user
                 // NOTE: For this project, you do not need unit tests for handling this exception.
+                return 1;
             }
+            return 0;
         }
+        return 2;
     }
+
+
 }

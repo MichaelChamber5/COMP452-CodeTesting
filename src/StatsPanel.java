@@ -8,7 +8,7 @@ import java.util.ArrayList;
  *
  * TODO: refactor this class
  */
-public class StatsPanel extends JPanel {
+public class StatsPanel extends StatsPanelDouble {
 
     private final JPanel resultsPanel;
 
@@ -61,6 +61,7 @@ public class StatsPanel extends JPanel {
         resultsPanel.setMinimumSize(new Dimension(120, 120));
         this.add(resultsPanel);
         resultsPanel.setAlignmentX(Component.CENTER_ALIGNMENT);
+        clearResults();
         updateResultsPanel();
 
         this.add(Box.createVerticalGlue());
@@ -78,43 +79,30 @@ public class StatsPanel extends JPanel {
 
         this.addComponentListener(new java.awt.event.ComponentAdapter() {
             public void componentShown(java.awt.event.ComponentEvent e) {
+                clearResults();
                 updateResultsPanel();
             }
         });
     }
 
 
+
     private void clearResults(){
+        clearResults(resultsLabels);
+    }
+
+
+    public void clearResults(ArrayList<JLabel> resultsLabels){
         for(JLabel lbl : resultsLabels){
             lbl.setText("--");
         }
     }
 
     private void updateResultsPanel(){
-        clearResults();
-
-        GameStats stats = new StatsFile();
-
-        for(int binIndex=0; binIndex<BIN_EDGES.length; binIndex++){
-            final int lowerBound = BIN_EDGES[binIndex];
-            int numGames = 0;
-
-            if(binIndex == BIN_EDGES.length-1){
-                // last bin
-                // Sum all the results from lowerBound on up
-                for(int numGuesses=lowerBound; numGuesses<stats.maxNumGuesses(); numGuesses++){
-                    numGames += stats.numGames(numGuesses);
-                }
-            }
-            else{
-                int upperBound = BIN_EDGES[binIndex+1];
-                for(int numGuesses=lowerBound; numGuesses <= upperBound; numGuesses++) {
-                    numGames += stats.numGames(numGuesses);
-                }
-            }
-
-            JLabel resultLabel = resultsLabels.get(binIndex);
-            resultLabel.setText(Integer.toString(numGames));
+        Integer[] results = getResults(BIN_EDGES, new StatsFile());
+        for (int i = 0; i < results.length; i++) {
+            JLabel resultLabel = resultsLabels.get(i);
+            resultLabel.setText(results[i].toString());
         }
     }
 }

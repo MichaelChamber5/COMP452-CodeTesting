@@ -65,3 +65,4 @@ public class StatsFile extends GameStats {
         return (statsMap.isEmpty() ? 0 : statsMap.lastKey());
     }
 }
+

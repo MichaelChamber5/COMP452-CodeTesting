@@ -15,18 +15,10 @@ import java.util.function.Function;
  */
 public class ComputerGuessesPanel extends JPanel {
 
-    private int numGuesses;
-    private int lastGuess;
-
-    // upperBound and lowerBound track the computer's knowledge about the correct number
-    // They are updated after each guess is made
-    private int upperBound; // correct number is <= upperBound
-    private int lowerBound; // correct number is >= lowerBound
+    private ComputerGuessesGame game;
 
     public ComputerGuessesPanel(JPanel cardsPanel, Consumer<GameResult> gameFinishedCallback){
-        numGuesses = 0;
-        upperBound = 1000;
-        lowerBound = 1;
+        game = new ComputerGuessesGame();
 
         this.setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
 
@@ -64,14 +56,14 @@ public class ComputerGuessesPanel extends JPanel {
 
     private void handleHigherGuess(JLabel guessMessage)
     {
-        lowerBound = Math.max(lowerBound, lastGuess + 1);
-        makeNextGuess(guessMessage);
+        game.handleHigherGuess();
+        updateGuessMessage(guessMessage);
     }
 
     private void handleLowerGuess(JLabel guessMessage)
     {
-        upperBound = Math.min(upperBound, lastGuess);
-        makeNextGuess(guessMessage);
+        game.handleLowerGuess();
+        updateGuessMessage(guessMessage);
     }
 
     private void handleCorrectGuess(JLabel guessMessage, JPanel cardsPanel, Consumer<GameResult> gameFinishedCallback)
@@ -79,32 +71,21 @@ public class ComputerGuessesPanel extends JPanel {
         guessMessage.setText("I guess ___.");
 
         // Send the result of the finished game to the callback
-        GameResult result = new GameResult(false, lastGuess, numGuesses);
+        GameResult result = game.handleCorrectGuess();
         gameFinishedCallback.accept(result);
 
         CardLayout cardLayout = (CardLayout) cardsPanel.getLayout();
         cardLayout.show(cardsPanel, ScreenID.GAME_OVER.name());
     }
 
-    private int getLastGuess(int lowerBound, int upperBound)
+    private void updateGuessMessage(JLabel guessMessage)
     {
-        return (lowerBound + upperBound + 1) / 2;
-    }
-
-    private void makeNextGuess(JLabel guessMessage)
-    {
-        lastGuess = getLastGuess(lowerBound, upperBound);
-        numGuesses++;
-        guessMessage.setText("I guess " + lastGuess + ".");
+        guessMessage.setText("I guess " + game.getLastGuess() + ".");
     }
 
     private void resetGame(JLabel guessMessage)
     {
-        numGuesses = 0;
-        upperBound = 1000;
-        lowerBound = 1;
-
-        lastGuess = getLastGuess(lowerBound, upperBound);
-        guessMessage.setText("I guess " + lastGuess + ".");
+        game.resetGame();
+        guessMessage.setText("I guess " + game.getLastGuess() + ".");
     }
 }

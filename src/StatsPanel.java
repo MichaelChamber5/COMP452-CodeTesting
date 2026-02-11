@@ -8,7 +8,7 @@ import java.util.ArrayList;
  *
  * TODO: refactor this class
  */
-public class StatsPanel extends StatsPanelDouble {
+public class StatsPanel extends StatsPanelRefactored {
 
     private final JPanel resultsPanel;
 

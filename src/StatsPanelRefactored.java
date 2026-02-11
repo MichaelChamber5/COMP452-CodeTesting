@@ -1,7 +1,6 @@
 import javax.swing.*;
-import java.util.ArrayList;
 
-public class StatsPanelDouble extends JPanel {
+public class StatsPanelRefactored extends JPanel {
     public Integer[] getResults(int[] bins, StatsFile stats){
         Integer[] returnInfo = new Integer[bins.length];
 

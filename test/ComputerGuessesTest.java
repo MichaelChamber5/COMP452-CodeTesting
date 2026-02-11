@@ -5,7 +5,7 @@ import static org.junit.jupiter.api.Assertions.*;
 /**
  * Test class for ComputerGuessesGame
  */
-public class MichaelTests {
+public class ComputerGuessesTest {
 
     private ComputerGuessesGame game;
 

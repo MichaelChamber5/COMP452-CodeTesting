@@ -1,4 +1,7 @@
 public class ComputerGuessesGame {
+    private static final int LOWEST_VALUE = 1;
+    private static final int HIGHEST_VALUE = 1000;
+
     private int numGuesses;
     private int lastGuess;
 
@@ -7,15 +10,18 @@ public class ComputerGuessesGame {
     private int upperBound; // correct number is <= upperBound
     private int lowerBound; // correct number is >= lowerBound
 
+    private boolean guessed;
+
     public ComputerGuessesGame() {
         resetGame();
     }
 
     public void resetGame() {
         numGuesses = 0;
-        upperBound = 1000;
-        lowerBound = 1;
+        upperBound = HIGHEST_VALUE;
+        lowerBound = LOWEST_VALUE;
         lastGuess = getLastGuess(lowerBound, upperBound);
+        guessed = false;
     }
 
     public void handleHigherGuess() {
@@ -29,11 +35,19 @@ public class ComputerGuessesGame {
     }
 
     public GameResult handleCorrectGuess() {
+        guessed = true;
         return new GameResult(false, lastGuess, numGuesses);
     }
 
     private int getLastGuess(int lowerBound, int upperBound) {
-        return (lowerBound + upperBound + 1) / 2;
+        int guess = (lowerBound + upperBound + 1) / 2;
+
+        if(guess > HIGHEST_VALUE || guess < LOWEST_VALUE)
+        {
+            throw new IndexOutOfBoundsException();
+        }
+
+        return guess;
     }
 
     private void makeNextGuess() {
@@ -57,5 +71,9 @@ public class ComputerGuessesGame {
 
     public int getLowerBound() {
         return lowerBound;
+    }
+
+    public boolean getGuessed() {
+        return guessed;
     }
 }

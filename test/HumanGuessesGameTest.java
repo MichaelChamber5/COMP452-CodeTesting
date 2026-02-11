@@ -25,6 +25,16 @@ public class HumanGuessesGameTest {
     }
 
     @Test
+    void HumanGuessesGameHighAndLowTest(){
+        HumanGuessesGame game = new HumanGuessesGame(300);
+
+        assertEquals(GuessResult.HIGH, game.makeGuess(301));
+        assertEquals(GuessResult.LOW, game.makeGuess(209));
+        assertEquals(GuessResult.HIGH, game.makeGuess(Integer.MAX_VALUE));
+        assertEquals(3, game.getNumGuesses());
+    }
+
+    @Test
     void HumanGuessesGameCorrectTest(){
         HumanGuessesGame game = new HumanGuessesGame(300);
         assertEquals(1, game.getNumGuesses());

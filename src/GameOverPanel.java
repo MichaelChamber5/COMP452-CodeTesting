@@ -67,6 +67,8 @@ public class GameOverPanel extends JPanel {
 
     public GameOverPanel(){
         this.gameResult = null;
+        this.answerTxt = new JLabel("The answer was ___.");;
+        this.numGuessesTxt = new JLabel("It took ___ ___ guesses.");;
     }
 
 
@@ -74,23 +76,25 @@ public class GameOverPanel extends JPanel {
      * Sets the game results, updates the UI, and saves results to the log file (if human was playing)
      */
     // TODO: refactor this method
-    public GameResult setGameResults(GameResult result){
+    public void setGameResults(GameResult result){
         this.gameResult = result;
         setAnswerText(result);
         writeStatsToFile(result);
-        return this.gameResult;
     }
 
     public String[] setAnswerText(GameResult result){
-        answerTxt.setText("The answer was " + result.correctValue + ".");
+        String[] texts = new String[2];
+        texts[0] = "The answer was " + result.correctValue + ".";
+        answerTxt.setText(texts[0]);
         if(result.numGuesses == 1){
-            numGuessesTxt.setText((result.humanWasPlaying ? "You" : "I") + " guessed it on the first try!");
+            texts[1] = (result.humanWasPlaying ? "You" : "I") + " guessed it on the first try!";
+            numGuessesTxt.setText(texts[1]);
         }
         else {
-            numGuessesTxt.setText("It took " + (result.humanWasPlaying ? "you" : "me") + " " + result.numGuesses + " guesses.");
+            texts[1] = "It took " + (result.humanWasPlaying ? "you" : "me") + " " + result.numGuesses + " guesses.";
+            numGuessesTxt.setText(texts[1]);
         }
-        String[] texts = new String[2];
-        texts[0] = answerTxt.getText();
+
         texts[1] = numGuessesTxt.getText();
         return texts;
     }
